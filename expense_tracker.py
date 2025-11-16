@@ -10,8 +10,10 @@
 #     if 3: totals
 #     if 4: quit
 
-import csv # lets you save/read data
+# import csv # lets you save/read data
 from datetime import datetime # datetime fills in today's date
+from operator import truediv
+
 
 def add_expense():
     # function for adding expense to CSV file
@@ -32,6 +34,23 @@ def add_expense():
         except ValueError:
             print("Please enter a valid number!")
 
+def view_expenses():
+    """Read all expenses from CSV and print them nicely."""
+    print("\n--- All Expenses ---")
+    try:
+        with open("expenses.csv", "r") as file:
+            # turn file into rows you can loop through
+            reader = csv.reader(file)
+            next(reader) # skip header row
+            empty = True
+            for row in reader:
+                empty = False
+                date, category, description, amount = row
+                print(f'{date} | {category} | {description} ${amount}')
+            if empty:
+                print("No expenses found.")
+    except FileNotFoundError:
+        print("Expenses file not found.")
 while True: # show user menu option using while loop
     print("--- Expense Tracker ---")
     print("1. Add Expense")
@@ -43,8 +62,10 @@ while True: # show user menu option using while loop
 
     if choice == "1":
         print("Add Expense")
+        add_expense()
     elif choice == "2":
         print("View All Expenses")
+        view_expenses()
     elif choice == "3":
         print("View totals")
     elif choice == "4":
